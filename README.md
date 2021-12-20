@@ -1,2 +1,2 @@
 # human-love-music-client
-:man-woman-girl-boy::heart::notes:
+:people_holding_hands::heart::notes:
