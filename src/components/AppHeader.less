@@ -1,0 +1,30 @@
+.appHeader {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  box-shadow: 0 2px 8px @shadow-color-inverse;
+}
+
+.appHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.appHeaderTitle {
+  font-family: 'Comic Neue', sans-serif;
+  a {
+    text-decoration: none !important;
+    font-size: 26px;
+    color: @text-color;
+    letter-spacing: 1px;
+    display: inline-block;
+    &:hover {
+      color: @text-color-inverse;
+    }
+  }
+}
