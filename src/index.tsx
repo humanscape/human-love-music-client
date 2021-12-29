@@ -5,6 +5,13 @@ import App from './App';
 import './index.less';
 import reportWebVitals from './reportWebVitals';
 
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+dayjs.locale('ko');
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
