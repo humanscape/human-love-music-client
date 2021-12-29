@@ -2,7 +2,7 @@ import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { Moment } from 'moment';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiRequest } from '../apis';
+import { api } from '../apis';
 
 interface DigestFormValues {
   title: string;
@@ -16,22 +16,19 @@ const DigestForm: FC = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values: DigestFormValues) => {
-    console.log(values);
     try {
-      const payload = {
+      setLoading(true);
+      const { data } = await api.digest.create({
         title: values.title,
         description: values.description,
         from: values.range[0].toDate(),
         to: values.range[1].toDate(),
-      };
-      setLoading(true);
-      const response = await apiRequest.post('/digests', payload);
+      });
       form.resetFields();
-      console.log(response.data);
       Modal.confirm({
         title: '성공',
         onOk: () => {
-          navigate(`/digest/${response.data.id}`);
+          navigate(`/digest/${data.id}`);
         },
         okText: '이동',
         cancelText: '닫기',
