@@ -1,3 +1,15 @@
+export interface PageRequest {
+  page?: number;
+  size?: number;
+}
+
+export interface PageResponse<T> {
+  data: T[];
+  total: number;
+  size: number;
+  page: number;
+}
+
 export interface CreateDigestRequest {
   title: string;
   description?: string;
