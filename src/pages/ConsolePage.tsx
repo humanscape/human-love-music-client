@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { DigestForm } from '../components';
+import './ConsolePage.less';
 
 const ConsolePage: FC = () => {
   return (
-    <div>
+    <div className="consolePageContainer">
       <DigestForm />
     </div>
   );
