@@ -2,6 +2,7 @@ import { api } from '.';
 import {
   CreateDigestRequest,
   DigestResponse,
+  DigestTrackResponse,
   PageRequest,
   PageResponse,
 } from './dtos';
@@ -18,4 +19,8 @@ export const getMany = (params: PageRequest) => {
   return api.request.get<PageResponse<DigestResponse>>('/digests', {
     params: params,
   });
+};
+
+export const getTracks = (id: string) => {
+  return api.request.get<DigestTrackResponse[]>(`/digests/${id}/tracks`);
 };

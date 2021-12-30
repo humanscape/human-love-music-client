@@ -1,3 +1,5 @@
+import { TrackSourceProvider } from '../../types';
+
 export interface PageRequest {
   page?: number;
   size?: number;
@@ -23,4 +25,20 @@ export interface DigestResponse {
   description?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TrackResponse {
+  id: string;
+  sourceProvider: TrackSourceProvider;
+  sourceUrl: string;
+  position: number;
+  title: string;
+  body?: string;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DigestTrackResponse extends TrackResponse {
+  digestId: string;
 }
