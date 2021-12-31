@@ -7,9 +7,11 @@ export const trackSourceProviderMap = {
   [TrackSourceProvider.YOUTUBE]: {
     name: 'YouTube',
     icon: createElement(YoutubeFilled),
+    defaultTrackUrl: process.env.REACT_APP_DEFAULT_YT_TRACK_URL as string,
   },
   [TrackSourceProvider.SOUNDCLOUD]: {
     name: 'SoundCloud',
     icon: createElement(SoundCloudIcon),
+    defaultTrackUrl: process.env.REACT_APP_DEFAULT_SC_TRACK_URL as string,
   },
 };

@@ -3,12 +3,16 @@
     padding: 0px !important;
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
     height: 64px;
     z-index: 1;
     box-shadow: 0 -2px 8px @shadow-color-inverse;
     .ant-btn-group {
       display: flex;
+    }
+    .ant-slider-rail {
+      background-color: transparent;
     }
   }
 }
@@ -21,4 +25,13 @@
   max-width: 1000px;
   margin: 8px auto;
   padding: 0 15px;
+}
+
+.playerControlsSeekBar {
+  position: absolute !important;
+  top: -2px;
+  z-index: 3;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
 }

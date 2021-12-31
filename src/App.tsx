@@ -1,9 +1,9 @@
 import { Layout } from 'antd';
 import { FC } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import { AppHeader, PlayerControls } from './components';
-import { ConsolePage, DigestListPage, DigestPage, RadioPage } from './pages';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.less';
+import { AppHeader } from './components';
+import { ConsolePage, DigestListPage, DigestPage, RadioPage } from './pages';
 
 const App: FC = () => (
   <Layout>
@@ -19,7 +19,6 @@ const App: FC = () => (
         </Routes>
       </div>
     </Layout.Content>
-    <PlayerControls />
   </Layout>
 );
 

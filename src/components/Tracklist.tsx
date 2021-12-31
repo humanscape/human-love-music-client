@@ -5,10 +5,17 @@ import { trackSourceProviderMap } from '../constants';
 
 interface Props {
   tracks: TrackResponse[];
+  currentTrack: TrackResponse | null;
+  onClickTitle: (track: TrackResponse) => void;
   emptyPlaceholder?: ReactNode;
 }
 
-const Tracklist: FC<Props> = ({ tracks, emptyPlaceholder }) => {
+const Tracklist: FC<Props> = ({
+  tracks,
+  currentTrack,
+  onClickTitle,
+  emptyPlaceholder,
+}) => {
   return (
     <List
       itemLayout="vertical"
@@ -34,7 +41,15 @@ const Tracklist: FC<Props> = ({ tracks, emptyPlaceholder }) => {
         >
           <List.Item.Meta
             title={
-              <Typography.Link ellipsis onClick={() => alert('play')}>
+              <Typography.Link
+                ellipsis
+                onClick={() => onClickTitle(item)}
+                style={
+                  currentTrack && currentTrack.id === item.id
+                    ? {}
+                    : { color: 'rgba(255, 255, 255, 0.85)' }
+                }
+              >
                 {item.title}
               </Typography.Link>
             }

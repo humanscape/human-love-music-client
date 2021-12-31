@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { CaretRightFilled } from '@ant-design/icons';
+import { CaretRightFilled, PauseOutlined } from '@ant-design/icons';
 import { FC } from 'react';
 
 interface Props {
@@ -18,10 +18,16 @@ const PlaylistPlayButton: FC<Props> = ({
   onResume,
 }) => {
   const button = isPlaying ? (
-    <Button icon="pause" shape="circle" onClick={() => onPause()} />
+    <Button
+      icon={<PauseOutlined />}
+      size="large"
+      shape="circle"
+      onClick={() => onPause()}
+    />
   ) : (
     <Button
       icon={<CaretRightFilled />}
+      size="large"
       type="primary"
       shape="circle"
       onClick={() => (hasCurrent ? onResume() : onPlay())}
