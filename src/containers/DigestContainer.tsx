@@ -87,16 +87,19 @@ const DigestContainer: FC<Props> = ({ id }) => {
   if (!digest) {
     return <div />;
   }
+
+  const currentTrack = currentProvider ? player[currentProvider].track : null;
+  const isPlaying = currentProvider
+    ? player[currentProvider].status.playing
+    : false;
   return (
     <>
       <div>
         <PlaylistHeader
           playButton={
             <PlaylistPlayButton
-              isPlaying={
-                currentProvider ? player[currentProvider].status.playing : false
-              }
-              hasCurrent={!!currentProvider}
+              isPlaying={isPlaying}
+              hasCurrent={!!currentTrack}
               onPause={() => currentProvider && pause(currentProvider)}
               onPlay={() => tracks.length > 0 && playTrack(tracks[0])}
               onResume={() => currentProvider && play(currentProvider)}
@@ -160,7 +163,10 @@ const DigestContainer: FC<Props> = ({ id }) => {
         <Divider />
         <Tracklist
           tracks={tracks}
-          onClickTitle={playTrack}
+          currentTrack={currentTrack}
+          onClickTitle={(track: TrackResponse) =>
+            currentTrack?.id !== track.id && playTrack(track)
+          }
           emptyPlaceholder={'😝 아무것도 없어요'}
         />
       </div>
