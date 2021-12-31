@@ -18,10 +18,16 @@ const PlaylistPlayButton: FC<Props> = ({
   onResume,
 }) => {
   const button = isPlaying ? (
-    <Button icon={<PauseOutlined />} shape="circle" onClick={() => onPause()} />
+    <Button
+      icon={<PauseOutlined />}
+      size="large"
+      shape="circle"
+      onClick={() => onPause()}
+    />
   ) : (
     <Button
       icon={<CaretRightFilled />}
+      size="large"
       type="primary"
       shape="circle"
       onClick={() => (hasCurrent ? onResume() : onPlay())}
