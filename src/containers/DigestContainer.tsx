@@ -1,5 +1,5 @@
 import { Divider } from 'antd';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { api } from '../apis';
 import {
@@ -32,12 +32,22 @@ const DigestContainer: FC<Props> = ({ id }) => {
     currentProvider,
     loading,
     init,
+    setRef,
     setLoading,
+    setDuration,
+    updateProgress,
     setTrack,
     play,
     pause,
     stopOthers,
   } = usePlayer();
+
+  const youtubePlayer = useRef<ReactPlayer | null>(null);
+  const soundcloudPlayer = useRef<ReactPlayer | null>(null);
+  const playerRefMap = {
+    [TrackSourceProvider.YOUTUBE]: youtubePlayer,
+    [TrackSourceProvider.SOUNDCLOUD]: soundcloudPlayer,
+  };
 
   useEffect(() => {
     const fetchDigest = async () => {
@@ -60,6 +70,7 @@ const DigestContainer: FC<Props> = ({ id }) => {
       play(provider); // autoplay
     }
     init(provider);
+    setRef(provider, playerRefMap[provider].current);
   };
 
   const playTrack = (track: TrackResponse) => {
@@ -82,6 +93,22 @@ const DigestContainer: FC<Props> = ({ id }) => {
       return;
     }
     playTrack(next);
+  };
+
+  const playPrev = (provider: TrackSourceProvider) => {
+    const current = player[provider].track;
+    if (!current) {
+      return;
+    }
+    const currentIndex = tracks.findIndex((it) => it.id === current.id);
+    if (currentIndex === -1) {
+      return;
+    }
+    const prev = tracks[currentIndex - 1];
+    if (!prev) {
+      return;
+    }
+    playTrack(prev);
   };
 
   if (!digest) {
@@ -121,6 +148,7 @@ const DigestContainer: FC<Props> = ({ id }) => {
               <ReactPlayer
                 // @see https://www.aleksandrhovhannisyan.com/blog/react-iframes-back-navigation-bug
                 key={`${provider}-${player[provider].track?.id ?? 'default'}`}
+                ref={playerRefMap[provider]}
                 url={
                   player[provider].track?.sourceUrl ??
                   trackSourceProviderMap[provider].defaultTrackUrl
@@ -130,6 +158,11 @@ const DigestContainer: FC<Props> = ({ id }) => {
                 onPlay={() => play(provider)}
                 onPause={() => pause(provider)}
                 onEnded={() => playNext(provider)}
+                onDuration={(duration) => setDuration(provider, duration)}
+                onProgress={({ played, playedSeconds }) =>
+                  player[provider].status.playing &&
+                  updateProgress(provider, played, playedSeconds)
+                }
                 config={{
                   // https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5
                   youtube: {
@@ -170,7 +203,23 @@ const DigestContainer: FC<Props> = ({ id }) => {
           emptyPlaceholder={'😝 아무것도 없어요'}
         />
       </div>
-      <PlayerControls />
+      <PlayerControls
+        isPlaying={isPlaying}
+        track={currentTrack}
+        duration={currentProvider && player[currentProvider].status.duration}
+        playedSeconds={
+          currentProvider && player[currentProvider].status.playedSeconds
+        }
+        controls={{
+          onPlay: () => currentProvider && play(currentProvider),
+          onPause: () => currentProvider && pause(currentProvider),
+          onPlayNext: () => currentProvider && playNext(currentProvider),
+          onPlayPrev: () => currentProvider && playPrev(currentProvider),
+          onSeekTo: (seconds: number) =>
+            currentProvider &&
+            playerRefMap[currentProvider].current?.seekTo(seconds),
+        }}
+      />
     </>
   );
 };

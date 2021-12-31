@@ -23,6 +23,12 @@ interface PlayerState {
 interface PlayActions {
   init: (provider: TrackSourceProvider) => void;
   setRef: (provider: TrackSourceProvider, ref: ReactPlayer | null) => void;
+  setDuration: (provider: TrackSourceProvider, duration: number) => void;
+  updateProgress: (
+    provider: TrackSourceProvider,
+    playedRatio: number,
+    playedSeconds: number,
+  ) => void;
   setTrack: (
     provider: TrackSourceProvider,
     track: TrackResponse | null,
@@ -78,6 +84,21 @@ export const usePlayer = (): PlayerHookProps => {
     setRef: (provider: TrackSourceProvider, ref: any | null) => {
       setPlayerState((draft) => {
         draft.player[provider].ref = ref;
+      });
+    },
+    setDuration: (provider: TrackSourceProvider, duration: number) => {
+      setPlayerState((draft) => {
+        draft.player[provider].status.duration = duration;
+      });
+    },
+    updateProgress: (
+      provider: TrackSourceProvider,
+      playedRatio: number,
+      playedSeconds: number,
+    ) => {
+      setPlayerState((draft) => {
+        draft.player[provider].status.playedRatio = playedRatio;
+        draft.player[provider].status.playedSeconds = playedSeconds;
       });
     },
     setTrack: (provider: TrackSourceProvider, track: TrackResponse | null) => {
