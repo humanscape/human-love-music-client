@@ -42,3 +42,23 @@ export interface TrackResponse {
 export interface DigestTrackResponse extends TrackResponse {
   digestId: string;
 }
+
+export interface CurrentTrack {
+  id: string;
+  startedAt: string;
+  duration: number;
+}
+
+export interface RadioResponse {
+  id: string;
+  roomName: string;
+  title: string;
+  description?: string;
+  currentTrack?: CurrentTrack;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RadioTrackResponse extends TrackResponse {
+  radioId: string;
+}
