@@ -1,7 +1,8 @@
-import { Divider } from 'antd';
+import { Divider, Space } from 'antd';
+import dayjs from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-import dayjs from 'dayjs';
+import io from 'socket.io-client';
 import { api } from '../apis';
 import { RadioResponse, RadioTrackResponse, TrackResponse } from '../apis/dtos';
 import {
@@ -14,14 +15,16 @@ import { trackSourceProviderMap } from '../constants';
 import { usePlayer } from '../hooks';
 import { TrackSourceProvider } from '../types';
 
+const socket = io(`${process.env.REACT_APP_API_BASE_URL}/radios/main`, {
+  transports: ['websocket'],
+});
+
 // TODO: debugging purpose only
 const disableNativeControl = false;
 
 interface Props {
   roomName: string;
 }
-
-const startedAt = new Date(); // TODO: replace
 
 const RadioContainer: FC<Props> = ({ roomName }) => {
   const [radio, setRadio] = useState<RadioResponse | null>(null);
@@ -48,6 +51,29 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     [TrackSourceProvider.SOUNDCLOUD]: soundcloudPlayer,
   };
 
+  const updateRadio = async () => {
+    const [radioRes, tracksRes] = await Promise.all([
+      api.radio.get(roomName),
+      api.radio.getTracks(roomName),
+    ]);
+    setRadio(radioRes.data);
+    setTracks(tracksRes.data);
+  };
+
+  // register socket events
+  useEffect(() => {
+    socket.on('track-added', async () => {
+      console.log('@track added');
+      await updateRadio();
+    });
+    // 스케쥴러에 의해 다음 재생할 곡이 있을 때 호출됨
+    // 서버는 이거 던지기 전에 radio, tracks를 이미 업데이트한 상태
+    socket.on('play-next', async () => {
+      console.log('@play next');
+      await updateRadio();
+    });
+  }, []);
+
   useEffect(() => {
     const fetchDigest = async () => {
       const { data } = await api.radio.get(roomName);
@@ -63,11 +89,17 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     fetchTracks();
   }, [roomName]);
 
+  // 최초 접속시, 곡이 인큐 될 때, 다음곡 넘어갈 때 트리거됨
+  // 곡이 인큐될 때는 playCurrentTrack 내부에서 필터링하여 동작 생략
+  useEffect(() => {
+    playCurrentTrack();
+  }, [radio, tracks]);
+
   const handleReady = (provider: TrackSourceProvider) => {
     if (player[provider].track) {
       setLoading(false);
       play(provider); // autoplay
-      const secondsPassed = dayjs().diff(startedAt, 's');
+      const secondsPassed = dayjs().diff(radio?.currentTrack?.startedAt, 's');
       playerRefMap[provider].current?.seekTo(secondsPassed);
     }
     init(provider);
@@ -78,6 +110,12 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     // 이 시점에서 새로 조회 안해도 이미 radio, tracks는 이벤트에 의해 최신상태
     const currentTrack = radio?.currentTrack;
     if (!currentTrack) {
+      return;
+    }
+    if (
+      currentProvider &&
+      currentTrack.id === player[currentProvider].track?.id
+    ) {
       return;
     }
     const track = tracks.find((it) => it.id === currentTrack.id);
@@ -121,6 +159,18 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
           }
           style={{ height: '544px' }}
         >
+          {!currentProvider && tracks.length ? (
+            <Space
+              align="center"
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <div>재생 버튼을 눌러주세요</div>
+            </Space>
+          ) : null}
           {(Object.keys(trackSourceProviderMap) as TrackSourceProvider[]).map(
             (provider) => (
               <ReactPlayer
