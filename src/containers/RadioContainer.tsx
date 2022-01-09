@@ -42,6 +42,8 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     play,
     pause,
     stopOthers,
+    volume,
+    changeVolume,
   } = usePlayer();
 
   const youtubePlayer = useRef<ReactPlayer | null>(null);
@@ -190,6 +192,7 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
                   player[provider].status.playing &&
                   updateProgress(provider, played, playedSeconds)
                 }
+                volume={volume / 100}
                 config={{
                   // https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5
                   youtube: {
@@ -238,6 +241,10 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
         playedSeconds={
           currentProvider && player[currentProvider].status.playedSeconds
         }
+        volume={{
+          value: volume,
+          onChange: changeVolume,
+        }}
       />
     </>
   );
