@@ -16,6 +16,7 @@ interface PlayerState {
       };
     };
   };
+  volume: number;
   currentProvider: TrackSourceProvider | null;
   loading: boolean;
 }
@@ -37,6 +38,7 @@ interface PlayActions {
   pause: (provider: TrackSourceProvider) => void;
   stop: (provider: TrackSourceProvider) => void;
   stopOthers: (provider: TrackSourceProvider) => void;
+  changeVolume: (value: number) => void;
   setLoading: (loading: boolean) => void;
 }
 
@@ -59,6 +61,7 @@ export const usePlayer = (): PlayerHookProps => {
       [TrackSourceProvider.SOUNDCLOUD]: initialProviderState,
     },
     currentProvider: null,
+    volume: 100,
     loading: false,
   });
 
@@ -126,6 +129,11 @@ export const usePlayer = (): PlayerHookProps => {
         if (key !== provider) {
           stop(key as TrackSourceProvider);
         }
+      });
+    },
+    changeVolume: (value: number) => {
+      setPlayerState((draft) => {
+        draft.volume = value;
       });
     },
     setLoading: (loading: boolean) => {

@@ -40,6 +40,8 @@ const DigestContainer: FC<Props> = ({ id }) => {
     play,
     pause,
     stopOthers,
+    volume,
+    changeVolume,
   } = usePlayer();
 
   const youtubePlayer = useRef<ReactPlayer | null>(null);
@@ -163,6 +165,7 @@ const DigestContainer: FC<Props> = ({ id }) => {
                   player[provider].status.playing &&
                   updateProgress(provider, played, playedSeconds)
                 }
+                volume={volume / 100}
                 config={{
                   // https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5
                   youtube: {
@@ -218,6 +221,10 @@ const DigestContainer: FC<Props> = ({ id }) => {
           onSeekTo: (seconds: number) =>
             currentProvider &&
             playerRefMap[currentProvider].current?.seekTo(seconds),
+        }}
+        volume={{
+          value: volume,
+          onChange: changeVolume,
         }}
       />
     </>

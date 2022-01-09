@@ -11,9 +11,6 @@
     .ant-btn-group {
       display: flex;
     }
-    .ant-slider-rail {
-      background-color: transparent;
-    }
   }
 }
 
@@ -34,4 +31,25 @@
   width: 100%;
   margin: 0 !important;
   padding: 0 !important;
+  .ant-slider-rail {
+    background-color: transparent;
+  }
+}
+
+.playerControlsVolume {
+  position: relative;
+  padding-left: 20px;
+  margin-left: auto;
+  width: 128px;
+  .anticon {
+    position: absolute;
+    left: 0;
+    top: -1px;
+  }
+  .ant-slider-track {
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+  .ant-slider-handle {
+    display: none;
+  }
 }
