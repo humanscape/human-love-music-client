@@ -1,6 +1,7 @@
 import {
   CaretRightFilled,
   PauseOutlined,
+  SoundOutlined,
   StepBackwardFilled,
   StepForwardFilled,
 } from '@ant-design/icons';
@@ -20,6 +21,10 @@ interface Props {
     onPlayPrev: () => void;
     onSeekTo: (seconds: number) => void;
   };
+  volume: {
+    value: number;
+    onChange: (value: number) => void;
+  };
   duration: number | null;
   playedSeconds: number | null;
 }
@@ -33,6 +38,7 @@ const PlayerControls: FC<Props> = ({
   isPlaying,
   track,
   controls,
+  volume,
   duration,
   playedSeconds,
 }) => {
@@ -120,7 +126,14 @@ const PlayerControls: FC<Props> = ({
             )}
           </Col>
           <Col span={4} style={{ textAlign: 'right' }}>
-            {/* TODO: volume control here */}
+            <div className="playerControlsVolume">
+              <SoundOutlined />
+              <Slider
+                value={volume.value}
+                tooltipVisible={false}
+                onChange={volume.onChange}
+              />
+            </div>
           </Col>
         </Row>
       </div>
