@@ -14,6 +14,7 @@ import {
 import { trackSourceProviderMap } from '../constants';
 import { usePlayer } from '../hooks';
 import { TrackSourceProvider } from '../types';
+import { getInitialVolume } from '../utils/volume';
 
 const socket = io(`${process.env.REACT_APP_API_BASE_URL}/radios/main`, {
   transports: ['websocket'],
@@ -44,7 +45,7 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     stopOthers,
     volume,
     changeVolume,
-  } = usePlayer();
+  } = usePlayer(getInitialVolume());
 
   const youtubePlayer = useRef<ReactPlayer | null>(null);
   const soundcloudPlayer = useRef<ReactPlayer | null>(null);

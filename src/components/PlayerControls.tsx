@@ -9,6 +9,7 @@ import { Button, Col, Layout, Row, Slider, Space, Typography } from 'antd';
 import { FC, useRef, useState } from 'react';
 import { TrackResponse } from '../apis/dtos';
 import { secondsToString } from '../utils/string';
+import { saveVolume } from '../utils/volume';
 import './PlayerControls.less';
 
 interface Props {
@@ -132,6 +133,7 @@ const PlayerControls: FC<Props> = ({
                 value={volume.value}
                 tooltipVisible={false}
                 onChange={volume.onChange}
+                onAfterChange={saveVolume}
               />
             </div>
           </Col>

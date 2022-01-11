@@ -16,6 +16,7 @@ import {
 import { trackSourceProviderMap } from '../constants';
 import { usePlayer } from '../hooks';
 import { TrackSourceProvider } from '../types';
+import { getInitialVolume } from '../utils/volume';
 
 // TODO: debugging purpose only
 const disableNativeControl = false;
@@ -42,7 +43,7 @@ const DigestContainer: FC<Props> = ({ id }) => {
     stopOthers,
     volume,
     changeVolume,
-  } = usePlayer();
+  } = usePlayer(getInitialVolume());
 
   const youtubePlayer = useRef<ReactPlayer | null>(null);
   const soundcloudPlayer = useRef<ReactPlayer | null>(null);
