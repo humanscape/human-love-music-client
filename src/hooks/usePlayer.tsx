@@ -44,7 +44,12 @@ interface PlayActions {
 
 export interface PlayerHookProps extends PlayerState, PlayActions {}
 
-export const usePlayer = (): PlayerHookProps => {
+export interface PlayerHookOptions {
+  initialVolume?: number;
+}
+
+export const usePlayer = (options?: PlayerHookOptions): PlayerHookProps => {
+  const initialVolume = options?.initialVolume ?? 100;
   const initialProviderState = {
     ref: null,
     track: null,
@@ -61,7 +66,7 @@ export const usePlayer = (): PlayerHookProps => {
       [TrackSourceProvider.SOUNDCLOUD]: initialProviderState,
     },
     currentProvider: null,
-    volume: 100,
+    volume: initialVolume,
     loading: false,
   });
 
