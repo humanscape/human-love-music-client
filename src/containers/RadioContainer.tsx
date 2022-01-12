@@ -45,7 +45,7 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
     stopOthers,
     volume,
     changeVolume,
-  } = usePlayer(getInitialVolume());
+  } = usePlayer({ initialVolume: getInitialVolume() });
 
   const youtubePlayer = useRef<ReactPlayer | null>(null);
   const soundcloudPlayer = useRef<ReactPlayer | null>(null);
