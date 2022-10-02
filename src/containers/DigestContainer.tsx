@@ -12,6 +12,7 @@ import {
   PlaylistHeader,
   PlaylistPlayButton,
   Tracklist,
+  TvNoise,
 } from '../components';
 import { trackSourceProviderMap } from '../constants';
 import { usePlayer } from '../hooks';
@@ -146,55 +147,61 @@ const DigestContainer: FC<Props> = ({ id }) => {
           }
           style={{ height: '544px' }}
         >
-          {(Object.keys(trackSourceProviderMap) as TrackSourceProvider[]).map(
-            (provider) => (
-              <ReactPlayer
-                // @see https://www.aleksandrhovhannisyan.com/blog/react-iframes-back-navigation-bug
-                key={`${provider}-${player[provider].track?.id ?? 'default'}`}
-                ref={playerRefMap[provider]}
-                url={
-                  player[provider].track?.sourceUrl ??
-                  trackSourceProviderMap[provider].defaultTrackUrl
-                }
-                playing={player[provider].status.playing}
-                onReady={() => handleReady(provider)}
-                onPlay={() => play(provider)}
-                onPause={() => pause(provider)}
-                onEnded={() => playNext(provider)}
-                onDuration={(duration) => setDuration(provider, duration)}
-                onProgress={({ played, playedSeconds }) =>
-                  player[provider].status.playing &&
-                  updateProgress(provider, played, playedSeconds)
-                }
-                volume={volume / 100}
-                config={{
-                  // https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5
-                  youtube: {
-                    playerVars: {
-                      controls: disableNativeControl ? 0 : 1,
-                      autoplay: 1,
-                      iv_load_policy: 3,
-                      rel: 0,
+          {currentProvider ? (
+            (Object.keys(trackSourceProviderMap) as TrackSourceProvider[]).map(
+              (provider) => (
+                <ReactPlayer
+                  // @see https://www.aleksandrhovhannisyan.com/blog/react-iframes-back-navigation-bug
+                  key={`${provider}-${player[provider].track?.id ?? 'default'}`}
+                  ref={playerRefMap[provider]}
+                  url={
+                    player[provider].track?.sourceUrl ??
+                    trackSourceProviderMap[provider].defaultTrackUrl
+                  }
+                  playing={player[provider].status.playing}
+                  onReady={() => handleReady(provider)}
+                  onPlay={() => play(provider)}
+                  onPause={() => pause(provider)}
+                  onEnded={() => playNext(provider)}
+                  onDuration={(duration) => setDuration(provider, duration)}
+                  onProgress={({ played, playedSeconds }) =>
+                    player[provider].status.playing &&
+                    updateProgress(provider, played, playedSeconds)
+                  }
+                  volume={volume / 100}
+                  config={{
+                    // https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5
+                    youtube: {
+                      playerVars: {
+                        controls: disableNativeControl ? 0 : 1,
+                        autoplay: 1,
+                        iv_load_policy: 3,
+                        rel: 0,
+                      },
                     },
-                  },
-                  // https://developers.soundcloud.com/docs/api/html5-widget
-                  soundcloud: {
-                    options: {
-                      single_active: false,
-                      hide_related: true,
-                      auto_play: true,
+                    // https://developers.soundcloud.com/docs/api/html5-widget
+                    soundcloud: {
+                      options: {
+                        single_active: false,
+                        hide_related: true,
+                        auto_play: true,
+                      },
                     },
-                  },
-                }}
-                width="100%"
-                height="100%"
-                style={{
-                  pointerEvents: disableNativeControl ? 'none' : 'all',
-                  display:
-                    !loading && currentProvider === provider ? 'block' : 'none',
-                }}
-              />
-            ),
+                  }}
+                  width="100%"
+                  height="100%"
+                  style={{
+                    pointerEvents: disableNativeControl ? 'none' : 'all',
+                    display:
+                      !loading && currentProvider === provider
+                        ? 'block'
+                        : 'none',
+                  }}
+                />
+              ),
+            )
+          ) : (
+            <TvNoise style={{ width: '100%', height: '100%' }} />
           )}
         </div>
         <Divider />
