@@ -175,7 +175,7 @@ const RadioContainer: FC<Props> = ({ roomName }) => {
               <div>재생 버튼을 눌러주세요</div>
             </Space>
           ) : null}
-          {currentProvider && !loading ? (
+          {currentProvider ? (
             (Object.keys(trackSourceProviderMap) as TrackSourceProvider[]).map(
               (provider) => (
                 <ReactPlayer
